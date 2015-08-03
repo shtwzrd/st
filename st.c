@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <X11/Xatom.h>
+#include <X11/Xresource.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/cursorfont.h>
@@ -86,6 +87,21 @@ char *argv0;
 #define TRUEBLUE(x)		(((x) & 0xff) << 8)
 #define TLINE(y)		((y) < term.scr ? term.hist[((y) + term.histi - term.scr \
 				+ histsize + 1) % histsize] : term.line[(y) - term.scr])
+
+#define XRESOURCE_LOAD_STRING(NAME, DST)                      \
+	XrmGetResource(db, NAME, "String", &type, &ret);      \
+	if (ret.addr != NULL && !strncmp("String", type, 64)) \
+		DST = ret.addr;
+
+#define XRESOURCE_LOAD_INTEGER(NAME, DST)                     \
+	XrmGetResource(db, NAME, "String", &type, &ret);      \
+	if (ret.addr != NULL && !strncmp("String", type, 64)) \
+		DST = strtoul(ret.addr, NULL, 10);
+
+#define XRESOURCE_LOAD_FLOAT(NAME, DST)                       \
+	XrmGetResource(db, NAME, "String", &type, &ret);      \
+	if (ret.addr != NULL && !strncmp("String", type, 64)) \
+		DST = strtof(ret.addr, NULL);
 
 
 enum glyph_attribute {
@@ -3481,8 +3497,6 @@ xinit(void)
 	pid_t thispid = getpid();
 	XColor xmousefg, xmousebg;
 
-	if (!(xw.dpy = XOpenDisplay(NULL)))
-		die("Can't open display\n");
 	xw.scr = XDefaultScreen(xw.dpy);
 	xw.vis = XDefaultVisual(xw.dpy, xw.scr);
 
@@ -4336,6 +4350,55 @@ run(void)
 }
 
 void
+config_init(void)
+{
+	if(!(xw.dpy = XOpenDisplay(NULL)))
+		die("Can't open display\n");
+
+	/* XXX */
+	char *resm;
+	char *type;
+	XrmDatabase db;
+	XrmValue ret;
+
+	XrmInitialize();
+	resm = XResourceManagerString(xw.dpy);
+
+	if (resm != NULL) {
+		db = XrmGetStringDatabase(resm);
+
+		XRESOURCE_LOAD_STRING("st.font", font);
+		XRESOURCE_LOAD_STRING("st.color1", colorname[1]);
+		XRESOURCE_LOAD_STRING("st.color2", colorname[2]);
+		XRESOURCE_LOAD_STRING("st.color3", colorname[3]);
+		XRESOURCE_LOAD_STRING("st.color4", colorname[4]);
+		XRESOURCE_LOAD_STRING("st.color5", colorname[5]);
+		XRESOURCE_LOAD_STRING("st.color6", colorname[6]);
+		XRESOURCE_LOAD_STRING("st.color7", colorname[7]);
+		XRESOURCE_LOAD_STRING("st.color8", colorname[8]);
+		XRESOURCE_LOAD_STRING("st.color9", colorname[9]);
+		XRESOURCE_LOAD_STRING("st.color10", colorname[10]);
+		XRESOURCE_LOAD_STRING("st.color11", colorname[11]);
+		XRESOURCE_LOAD_STRING("st.color12", colorname[12]);
+		XRESOURCE_LOAD_STRING("st.color13", colorname[13]);
+		XRESOURCE_LOAD_STRING("st.color14", colorname[14]);
+		XRESOURCE_LOAD_STRING("st.color15", colorname[15]);
+		XRESOURCE_LOAD_STRING("st.background", colorname[256]);
+		XRESOURCE_LOAD_STRING("st.foreground", colorname[257]);
+		XRESOURCE_LOAD_STRING("st.cursorColor", colorname[258]);
+		XRESOURCE_LOAD_STRING("st.termname", termname);
+		XRESOURCE_LOAD_STRING("st.shell", shell);
+		XRESOURCE_LOAD_INTEGER("st.xfps", xfps);
+		XRESOURCE_LOAD_INTEGER("st.actionfps", actionfps);
+		XRESOURCE_LOAD_INTEGER("st.blinktimeout", blinktimeout);
+		XRESOURCE_LOAD_INTEGER("st.bellvolume", bellvolume);
+		XRESOURCE_LOAD_INTEGER("st.tabspaces", tabspaces);
+		XRESOURCE_LOAD_FLOAT("st.cwscale", cwscale);
+		XRESOURCE_LOAD_FLOAT("st.chscale", chscale);
+	}
+}
+
+void
 usage(void)
 {
 	die("%s " VERSION " (c) 2010-2015 st engineers\n"
@@ -4405,6 +4468,7 @@ run:
 	}
 	setlocale(LC_CTYPE, "");
 	XSetLocaleModifiers("");
+  config_init();
 	tnew(MAX(cols, 1), MAX(rows, 1));
 	xinit();
 	selinit();

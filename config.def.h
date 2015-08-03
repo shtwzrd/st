@@ -5,7 +5,7 @@
  *
  * font: see http://freedesktop.org/software/fontconfig/fontconfig-user.html
  */
-static char font[] = "Liberation Mono:pixelsize=12:antialias=false:autohint=false";
+static char   *font = "Dejavu Sans Mono:pixelsize=12:antialias=false:autohint=false";
 static int borderpx = 2;
 static int histsize = 2000;
 
@@ -17,7 +17,7 @@ static int histsize = 2000;
  * 4: value of shell in /etc/passwd
  * 5: value of shell in config.h
  */
-static char shell[] = "/bin/sh";
+static char *shell = "/bin/sh";
 static char *utmp = NULL;
 static char stty_args[] = "stty raw -echo -iexten echonl";
 
@@ -64,47 +64,40 @@ static unsigned int cursorthickness = 2;
 static int bellvolume = 0;
 
 /* TERM value */
-static char termname[] = "st-256color";
+//static char termname[] = "st-256color";
+static char *termname = "xterm-256color";
 
-static unsigned int tabspaces = 8;
+static unsigned int tabspaces = 2;
 
 
-/* Terminal colors (16 first used in escape sequence) */
 static const char *colorname[] = {
-	/* 8 normal colors */
-	"black",
-	"red3",
-	"green3",
-	"yellow3",
-	"blue2",
-	"magenta3",
-	"cyan3",
-	"gray90",
-
-	/* 8 bright colors */
-	"gray50",
-	"red",
-	"green",
-	"yellow",
-	"#5c5cff",
-	"magenta",
-	"cyan",
-	"white",
-
+	"#594243",
+	"#d17b49",
+	"#7b8748",
+	"#af865a",
+	"#535C5C",
+	"#775759",
+	"#6d715e",
+	"#c0b18b",
+	"#4A3637",
+	"#e0824c",
+	"#8d9b53",
+	"#c29565",
+	"#646e6e",
+	"#896567",
+	"#80866f",
+	"#d1c198",
 	[255] = 0,
-
-	/* more colors can be added after 255 to use with DefaultXX */
-	"#cccccc",
+	/* add your own colours here */
+	"#08120B", /* background */
+	"#c0b18b", /* foreground */
+	"#8d9b53", /* cursor */
 };
 
 
-/*
- * Default colors (colorname index)
- * foreground, background, cursor
- */
-static unsigned int defaultfg = 7;
-static unsigned int defaultbg = 0;
-static unsigned int defaultcs = 256;
+static unsigned int defaultbg = 256;
+static unsigned int defaultfg = 257;
+static unsigned int defaultcs = 258;
 
 
 /*
