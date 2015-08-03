@@ -69,6 +69,8 @@ static char *termname = "xterm-256color";
 
 static unsigned int tabspaces = 2;
 
+/* bg opacity */
+static const int alpha = 0xdd;
 
 static const char *colorname[] = {
 	"#594243",

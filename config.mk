@@ -14,7 +14,7 @@ X11LIB = /opt/X11/lib
 INCS = -I. -I/usr/include -I${X11INC} -I/opt/X11/include/freetype2 \
        `pkg-config --cflags fontconfig` \
        `pkg-config --cflags freetype2`
-LIBS = -L/usr/lib -lc -L${X11LIB} -lm -lrt -lX11 -lutil -lXext -lXft \
+LIBS = -L/usr/lib -lc -L${X11LIB} -lm -lrt -lX11 -lutil -lXext -lXft -lXrender\
        `pkg-config --libs fontconfig`  \
        `pkg-config --libs freetype2`
 
