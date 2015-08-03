@@ -4437,6 +4437,8 @@ config_init(void)
 		XRESOURCE_LOAD_INTEGER("st.blinktimeout", blinktimeout);
 		XRESOURCE_LOAD_INTEGER("st.bellvolume", bellvolume);
 		XRESOURCE_LOAD_INTEGER("st.tabspaces", tabspaces);
+		XRESOURCE_LOAD_INTEGER("st.histsize", histsize);
+		XRESOURCE_LOAD_INTEGER("st.bgalpha", alpha);
 		XRESOURCE_LOAD_FLOAT("st.cwscale", cwscale);
 		XRESOURCE_LOAD_FLOAT("st.chscale", chscale);
 	}
